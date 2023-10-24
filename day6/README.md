@@ -20,5 +20,5 @@ where,
 1. All arrows should be '=' sign.
 2. No spaces allowed.
 3. Capital Letters only as Non-terminal symbols and small letters as terminals.
-4. '/' only, not '\'.
+4. Forward slash '/' only.
 
