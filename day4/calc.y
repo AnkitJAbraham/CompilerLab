@@ -1,34 +1,65 @@
-%{
+ %{
+
     #include<stdio.h>
+
     int flag=0;
+
+   
+
 %}
 
 %token NUMBER
+
+
+
 %left '+' '-'
+
 %left '*' '/' '%'
+
 %left '(' ')'
 
 %%
-ArithmeticExpression:  E{
-                            printf("\n\tResult - %d\n", $$);
-                            return 0;
+
+ArithmeticExpression: E {
+                            if (yylex() == 0) {
+                                printf("\n\tResult - %d\n", $1);
+                                return 0;
+                            } else {
+                                yyerror("Invalid characters after expression");
+                                return 1;  // Indicate parsing error
+                            }
                         };
 
-E: E'+'E {$$=$1+$3;} |E'-'E {$$=$1-$3;} |E'*'E {$$=$1*$3;} |E'/'E {$$=$1/$3;} |E'%'E {$$=$1%$3;} 
-|'('E')' {$$=$2;} | NUMBER {$$=$1;};
+E: '(' E ')' { $$ = $2; } | E '+' E { $$ = $1 + $3; }
+   | E '-' E { $$ = $1 - $3; } | E '*' E { $$ = $1 * $3; }
+   | E '/' E { $$ = $1 / $3; } | E '%' E { $$ = $1 % $3; }
+   | NUMBER { $$ = $1; };
+
+
 %%
 
-int main()
+
+
+void main()
+
 {
-    printf("\n\tEnter any arithmetic expression : \n");
-    yyparse();
-    if(flag == 0)
-        printf("\n\tEntered arithmetic expression is valid.\n\n");
-    return 0;
+
+   printf("\nEnter any arithmetic expression : \n");
+
+   yyparse();
+
+  if(flag==0)
+
+   printf("\nEntered arithmetic expression is Valid\n\n");
+
+ 
+
 }
 
-void yyerror()
-{
-   printf("\n\tEntered arithmetic expression is invalid.\n\n");
-   flag=1;
+void yyerror(const char *s) {
+    printf("\nError: %s\n", s);
+    printf("Entered arithmetic expression is Invalid\n");
+    flag = 1;
 }
+
+
